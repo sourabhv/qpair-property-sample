@@ -27,6 +27,13 @@
                 android:textSize="15sp"
                 android:padding="10dp"/>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/clear_status"
+                android:textColor="@android:color/white"
+                android:onClick="clearStatus" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +51,8 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/property_name"
                 android:textSize="20sp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:inputType="textEmailAddress|textNoSuggestions" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -103,7 +111,8 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/property_name"
                 android:textSize="20sp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:inputType="textEmailAddress|textNoSuggestions" />
 
             <EditText
                 android:id="@+id/set_property_value"
@@ -113,7 +122,8 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/property_value"
                 android:textSize="20sp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:inputType="textEmailAddress|textNoSuggestions" />
 
             <Button
                 android:layout_width="match_parent"
@@ -139,7 +149,8 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/property_name"
                 android:textSize="20sp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:inputType="textEmailAddress|textNoSuggestions" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -198,7 +209,8 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/property_name"
                 android:textSize="20sp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:inputType="textEmailAddress|textNoSuggestions" />
 
             <Button
                 android:layout_width="match_parent"

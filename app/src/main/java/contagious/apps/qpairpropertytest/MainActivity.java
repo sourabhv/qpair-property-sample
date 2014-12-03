@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -90,10 +91,13 @@ public class MainActivity extends Activity {
         pauseString.append("\nIn onPause, ");
         for (Object o : properties.entrySet()) {
             Map.Entry pair = (Map.Entry) o;
-            deleteQPairProperty(contentResolver, pair.getKey().toString());
+            String uriString = QPairConstants.PROPERTY_SCHEME_AUTHORITY + "/local/" + getPackageName() +
+                    "/" + pair.getKey().toString();
+            deleteQPairProperty(contentResolver, uriString);
             pauseString.append("delete ").append(pair.getKey().toString()).append(", ");
         }
         status.setText(status.getText() + pauseString.toString());
+        Log.d("onPause", pauseString.toString());
         super.onPause();
     }
 
@@ -104,10 +108,13 @@ public class MainActivity extends Activity {
         resumeString.append("\nIn onResume, ");
         for (Object o : properties.entrySet()) {
             Map.Entry pair = (Map.Entry) o;
-            setQPairProperty(contentResolver, pair.getKey().toString(), pair.getValue().toString());
+            String uriString = QPairConstants.PROPERTY_SCHEME_AUTHORITY + "/local/" + getPackageName() +
+                    "/" + pair.getKey().toString();
+            setQPairProperty(contentResolver, uriString, pair.getValue().toString());
             resumeString.append("insert ").append(pair.getKey().toString()).append(": ").append(pair.getValue().toString()).append(", ");
         }
         status.setText(status.getText() + resumeString.toString());
+        Log.d("onResume", resumeString.toString());
     }
 
     class QPairContentObserver extends ContentObserver {
@@ -127,6 +134,10 @@ public class MainActivity extends Activity {
             super.onChange(selfChange);
             Toast.makeText(MainActivity.this, "Oh so this one!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void clearStatus(View view) {
+        status.setText("Status:");
     }
 
     public void getProperty(View view) {
@@ -183,6 +194,7 @@ public class MainActivity extends Activity {
         String owner = "/local/" + getPackageName() + "/";
         String uriString = QPairConstants.PROPERTY_SCHEME_AUTHORITY + owner + property_name;
         deleteQPairProperty(contentResolver, uriString);
+        properties.remove(property_name);
     }
 
     public static String getQpairProperty(ContentResolver resolver, String uriString, String defaultValue) {
