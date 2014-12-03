@@ -9,5 +9,6 @@
     <string name="set_property">Set Property</string>
     <string name="local">Local</string>
     <string name="peer">Peer</string>
+    <string name="track_property">Track Property</string>
 
 </resources>
