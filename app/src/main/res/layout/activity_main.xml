@@ -18,6 +18,16 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/status"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:padding="10dp"/>
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -170,6 +180,33 @@
                 android:text="@string/track_property"
                 android:textColor="@android:color/white"
                 android:onClick="trackProperty" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="@string/delete_property"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:padding="10dp"/>
+
+            <EditText
+                android:id="@+id/delete_property_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/property_name"
+                android:textSize="20sp"
+                android:gravity="center" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/delete_property"
+                android:textColor="@android:color/white"
+                android:onClick="deleteProperty" />
+
 
         </LinearLayout>
 

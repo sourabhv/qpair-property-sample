@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import com.lge.qpair.api.r1.QPairConstants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class MainActivity extends Activity {
 
@@ -24,13 +27,16 @@ public class MainActivity extends Activity {
     public static final String IS_QPAIR_ON_PROPERTY_URI = "/local/qpair/is_on";
 
     ContentResolver contentResolver;
+    Map<String, String> properties;
 
+    TextView status;
     EditText getPropertyName;
     TextView getPropertyValue;
     EditText setPropertyName;
     EditText setPropertyValue;
     EditText trackPropertyName;
     TextView trackPropertyValue;
+    EditText deletePropertyName;
 
     RadioButton getLocal;
     RadioButton getPeer;
@@ -43,13 +49,16 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         contentResolver = getContentResolver();
+        properties = new HashMap<String, String>();
 
+        status = (TextView) findViewById(R.id.status);
         getPropertyName = (EditText) findViewById(R.id.get_property_name);
         getPropertyValue = (TextView) findViewById(R.id.get_property_value);
         setPropertyName = (EditText) findViewById(R.id.set_property_name);
         setPropertyValue = (EditText) findViewById(R.id.set_property_value);
         trackPropertyName = (EditText) findViewById(R.id.track_property_name);
         trackPropertyValue = (TextView) findViewById(R.id.track_property_value);
+        deletePropertyName = (EditText) findViewById(R.id.delete_property_value);
 
         getLocal = (RadioButton) findViewById(R.id.get_local);
         getPeer = (RadioButton) findViewById(R.id.get_peer);
@@ -75,15 +84,48 @@ public class MainActivity extends Activity {
                     .show();
     }
 
+    @Override
+    protected void onPause() {
+        StringBuilder pauseString = new StringBuilder();
+        pauseString.append("\nIn onPause, ");
+        for (Object o : properties.entrySet()) {
+            Map.Entry pair = (Map.Entry) o;
+            deleteQPairProperty(contentResolver, pair.getKey().toString());
+            pauseString.append("delete ").append(pair.getKey().toString()).append(", ");
+        }
+        status.setText(status.getText() + pauseString.toString());
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StringBuilder resumeString = new StringBuilder();
+        resumeString.append("\nIn onResume, ");
+        for (Object o : properties.entrySet()) {
+            Map.Entry pair = (Map.Entry) o;
+            setQPairProperty(contentResolver, pair.getKey().toString(), pair.getValue().toString());
+            resumeString.append("insert ").append(pair.getKey().toString()).append(": ").append(pair.getValue().toString()).append(", ");
+        }
+        status.setText(status.getText() + resumeString.toString());
+    }
+
     class QPairContentObserver extends ContentObserver {
         public QPairContentObserver(Handler handler) {
             super(handler);
         }
         @Override
         public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
             Toast.makeText(MainActivity.this, "Inside onChange. uri: " + uri.toString(), Toast.LENGTH_LONG).show();
             String value = getQpairProperty(contentResolver, uri.toString(), "not found");
             trackPropertyValue.setText(value);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            Toast.makeText(MainActivity.this, "Oh so this one!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -116,7 +158,7 @@ public class MainActivity extends Activity {
                 updateQPairProperty(contentResolver, uriString, property_value);
             }
         }
-
+        properties.put(property_name, property_value);
         setPropertyName.setText("");
         setPropertyValue.setText("");
     }
@@ -126,14 +168,21 @@ public class MainActivity extends Activity {
         String owner = "";
 
         if (trackLocal.isChecked())
-            owner = "/local/"+ getPackageName() + "/";
+            owner = "/local/" + getPackageName() + "/";
         else if (trackPeer.isChecked())
-            owner = "/peer/"+ getPackageName() + "/";
+            owner = "/peer/" + getPackageName() + "/";
 
         if (!owner.equals("") && !property_name.equals("")) {
             String uriString = QPairConstants.PROPERTY_SCHEME_AUTHORITY + owner + property_name;
             trackQpairProperty(contentResolver, uriString);
         }
+    }
+
+    public void deleteProperty(View view) {
+        String property_name = deletePropertyName.getText().toString();
+        String owner = "/local/" + getPackageName() + "/";
+        String uriString = QPairConstants.PROPERTY_SCHEME_AUTHORITY + owner + property_name;
+        deleteQPairProperty(contentResolver, uriString);
     }
 
     public static String getQpairProperty(ContentResolver resolver, String uriString, String defaultValue) {
