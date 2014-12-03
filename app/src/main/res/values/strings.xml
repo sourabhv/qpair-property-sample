@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">QPair Property Test</string>
+    <string name="action_settings">Settings</string>
+    <string name="get_property">Get Property</string>
+    <string name="property_name">Property Name</string>
+    <string name="property_value">Property Value</string>
+    <string name="set_property">Set Property</string>
+    <string name="local">Local</string>
+    <string name="peer">Peer</string>
+
+</resources>
