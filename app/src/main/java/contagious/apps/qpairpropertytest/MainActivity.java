@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lge.qpair.api.r1.QPairConstants;
 
@@ -81,7 +80,7 @@ public class MainActivity extends Activity {
             new AlertDialog.Builder(this)
                     .setTitle("QPair")
                     .setMessage(message)
-                    .setPositiveButton("OK", null)
+                    .setNeutralButton("OK", null)
                     .show();
     }
 
@@ -123,16 +122,8 @@ public class MainActivity extends Activity {
         }
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            super.onChange(selfChange, uri);
-            Toast.makeText(MainActivity.this, "Inside onChange. uri: " + uri.toString(), Toast.LENGTH_LONG).show();
-            String value = getQpairProperty(contentResolver, uri.toString(), "not found");
+            String value = getQpairProperty(contentResolver, uri.toString(), "<new value not set>");
             trackPropertyValue.setText(value);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-            Toast.makeText(MainActivity.this, "Oh so this one!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -210,7 +201,7 @@ public class MainActivity extends Activity {
                 cursor.close();
             }
         }
-        return value;
+        return value.equals("") ? defaultValue : value;
     }
 
     public static Uri setQPairProperty(ContentResolver resolver, String uriString, String value) {
